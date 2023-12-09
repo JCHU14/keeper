@@ -1,10 +1,25 @@
 <template>
-  <nav class="navbar navbar-expand-sm navbar-dark bg-dark px-3">
+  <nav class="navbar navbar-expand-sm boxshadow  px-3">
     <router-link class="navbar-brand d-flex" :to="{ name: 'Home' }">
-      <div class="d-flex flex-column align-items-center">
-        <img alt="logo" src="../assets/img/cw-logo.png" height="45" />
+      <div class="d-flex justify-content-center p-2  align-items-center">
+        <img alt="logo"
+          src="https://th.bing.com/th/id/R.3e5c857f6e64244e24bfa077f922d104?rik=YbZPUfrFP18BRg&pid=ImgRaw&r=0"
+          height="45" />
       </div>
     </router-link>
+
+    <div class="d-flex p-2 justify-content-between">
+
+      <div class="align-items-center p-1">
+        <button data-bs-toggle="modal" data-bs-target="#createModal" class="btn glow fs-5">Create Keep</button>
+      </div>
+      <div class="align-items-center p-1">
+        <button class="btn glow fs-5">Create Vault</button>
+      </div>
+
+    </div>
+
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
       aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -12,24 +27,22 @@
     <div class="collapse navbar-collapse" id="navbarText">
       <ul class="navbar-nav me-auto">
         <li>
-          <router-link :to="{ name: 'About' }" class="btn text-success lighten-30 selectable text-uppercase">
-            About
-          </router-link>
+
         </li>
       </ul>
       <!-- LOGIN COMPONENT HERE -->
-      <div>
-        <button class="btn text-light" @click="toggleTheme"><i class="mdi" :class="theme == 'light' ? 'mdi-weather-sunny' : 'mdi-weather-night'"></i></button>
-      </div>
+
       <Login />
     </div>
   </nav>
+  <CreateKeep />
 </template>
 
 <script>
 import { onMounted, ref } from 'vue';
 import { loadState, saveState } from '../utils/Store.js';
 import Login from './Login.vue';
+import CreateKeep from './CreateKeep.vue';
 export default {
   setup() {
 
@@ -48,7 +61,7 @@ export default {
       }
     }
   },
-  components: { Login }
+  components: { Login, CreateKeep }
 }
 </script>
 
@@ -57,14 +70,27 @@ a:hover {
   text-decoration: none;
 }
 
+.purple {
+  background-color: rgba(219, 49, 219, 0.696);
+}
+
 .nav-link {
   text-transform: uppercase;
+}
+
+.boxshadow {
+  border-bottom: 1px solid black;
 }
 
 .navbar-nav .router-link-exact-active {
   border-bottom: 2px solid var(--bs-success);
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
+}
+
+.glow:hover {
+  box-shadow: 0px 0px 20px darkmagenta;
+  transition: ease-in-out 0.3s;
 }
 
 @media screen and (min-width: 768px) {

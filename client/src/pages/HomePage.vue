@@ -1,43 +1,54 @@
 <template>
-  <div class="home flex-grow-1 d-flex flex-column align-items-center justify-content-center">
-    <div class="home-card p-5 card align-items-center shadow rounded elevation-3">
-      <img src="https://bcw.blob.core.windows.net/public/img/8600856373152463" alt="CodeWorks Logo"
-        class="rounded-circle">
-      <h1 class="my-5 bg-dark text-white p-3 rounded text-center">
-        Vue 3 Starter
-      </h1>
+  <div class="container-fluid">
+    <div class="row">
+
+      <div class="col-md-4 col-6 pt-5" v-for="keep in keeps" :key="keep">
+        <KeepComp :keepProp="keep" />
+      </div>
+
     </div>
   </div>
 </template>
 
 <script>
+import { computed, onMounted } from 'vue';
+import { keepsService } from '../services/KeepsService';
+import Pop from '../utils/Pop';
+import KeepComp from '../components/KeepComp.vue';
+import { AppState } from '../AppState';
+import { vaultService } from '../services/VaultService';
+
+
+
 export default {
   setup() {
-    return {
-      
+    onMounted(() => {
+      getKeeps();
+      getVaults();
+    });
+    async function getKeeps() {
+      try {
+        await keepsService.getKeeps();
+      }
+      catch (error) {
+        Pop.error;
+      }
     }
-  }
+
+    async function getVaults() {
+      try {
+        await vaultService.getVaults();
+      }
+      catch (error) {
+        Pop.error;
+      }
+    }
+    return {
+      keeps: computed(() => AppState.keeps)
+    };
+  },
+  components: { KeepComp }
 }
 </script>
 
-<style scoped lang="scss">
-.home {
-  display: grid;
-  height: 80vh;
-  place-content: center;
-  text-align: center;
-  user-select: none;
-
-  .home-card {
-    width: clamp(500px, 50vw, 100%);
-
-    >img {
-      height: 200px;
-      max-width: 200px;
-      width: 100%;
-      object-fit: contain;
-      object-position: center;
-    }
-  }
-}
-</style>
+<style scoped lang="scss"></style>
