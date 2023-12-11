@@ -61,6 +61,7 @@ namespace keeper.Services
             {
                 throw new Exception($"Invalid Id: {vaultId}");
             }
+
             return vault;
         }
 

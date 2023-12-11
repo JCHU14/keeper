@@ -34,11 +34,11 @@ namespace keeper.Services
         internal Keep GetKeepById(int keepId)
         {
             Keep keep = _repository.GetKeepById(keepId);
-            keep.Views++;
             if (keep == null)
             {
                 throw new Exception($"Invalid Id: {keepId}");
             }
+            keep.Views += 1;
             return keep;
         }
 
@@ -64,6 +64,10 @@ namespace keeper.Services
             Keep keep = _repository.UpdateKeep(keepToUpdate);
             return keep;
         }
+
+
+
+
     }
 
 }

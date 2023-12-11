@@ -8,10 +8,13 @@ namespace keeper.Controllers
         private readonly VaultsService _vaultsService;
         private readonly Auth0Provider _auth0Provider;
 
-        public VaultsController(Auth0Provider auth0Provider, VaultsService vaultsService)
+        private readonly VaultKeepsService _vaultKeepsService;
+
+        public VaultsController(Auth0Provider auth0Provider, VaultsService vaultsService, VaultKeepsService vaultKeepsService)
         {
             _auth0Provider = auth0Provider;
             _vaultsService = vaultsService;
+            _vaultKeepsService = vaultKeepsService;
         }
 
 
@@ -91,6 +94,21 @@ namespace keeper.Controllers
                 Account userInfo = await _auth0Provider.GetUserInfoAsync<Account>(HttpContext);
                 string message = _vaultsService.DestroyVault(vaultId, userInfo.Id);
                 return Ok(message);
+            }
+            catch (Exception error)
+            {
+
+                return BadRequest(error.Message);
+            }
+        }
+
+        [HttpGet("{vaultId}/keeps")]
+        public ActionResult<List<ProfileVaultKeeps>> GetKeepsByVaultId(int vaultId)
+        {
+            try
+            {
+                List<ProfileVaultKeeps> vaultKeeps = _vaultKeepsService.GetVaultKeepsByVaultId(vaultId);
+                return Ok(vaultKeeps);
             }
             catch (Exception error)
             {

@@ -65,12 +65,10 @@ namespace keeper.Repositories
             string sql = @"
             SELECT
             vault.*,
-            COUNT(keep.id) AS keepCount,
             acc.*
             FROM vaults vault
             JOIN accounts acc ON acc.id = vault.creatorId
-            LEFT JOIN keeps keep On keep.vaultId = vault.id
-            GROUP BY (vault.id);";
+            ;";
 
             List<Vault> vaults = _db.Query<Vault, Profile, Vault>(sql, VaultBuilder).ToList();
             return vaults;

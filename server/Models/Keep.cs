@@ -10,6 +10,7 @@ namespace keeper.Models
         public string Img { get; set; }
         public int Views { get; set; }
 
+
         public string AccountId { get; set; }
         public string CreatorId { get; set; }
 

@@ -41,6 +41,10 @@ public class Startup
     services.AddScoped<KeepRepo>();
     services.AddScoped<KeepService>();
 
+    services.AddScoped<VaultKeepRepo>();
+    services.AddScoped<VaultKeepsService>();
+
+
 
 
 

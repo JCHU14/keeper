@@ -18,9 +18,9 @@ CREATE TABLE
         name CHAR(255) NOT NULL,
         img VARCHAR(1000) NOT NULL,
         description VARCHAR(500) NOT NULL,
-        -- vaultId INT NOT NULL,
-        -- Foreign Key (vaultId) REFERENCES vaults(id) ON DELETE CASCADE,
-        visits INT NOT NULL DEFAULT 0,
+        vaultId INT,
+        Foreign Key (vaultId) REFERENCES vaults(id) ON DELETE CASCADE,
+        views INT DEFAULT 0,
         -- accountId VARCHAR(255) NOT NULL,
         -- Foreign Key (accountId) REFERENCES accounts(id) ON DELETE CASCADE,
         FOREIGN KEY (creatorId) REFERENCES accounts(id) ON DELETE CASCADE
@@ -42,19 +42,19 @@ CREATE TABLE
     ) default charset utf8 COMMENT '';
 
 CREATE TABLE
-    IF NOT EXISTS vaultKeep(
+    IF NOT EXISTS vaultKeeps(
         id INT NOT NULL primary key COMMENT 'primary key' AUTO_INCREMENT,
         createdAt DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Time Created',
+        updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Last Update',
         vaultId INT NOT NULL,
         keepId INT NOT NULL,
-        updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Last Update',
         creatorId VARCHAR(255) NOT NULL,
-        FOREIGN KEY (vaultId) REFERENCES vaults(id),
-        FOREIGN KEY (keepId) REFERENCES keeps(id),
-        FOREIGN KEY (creatorId) REFERENCES accounts(id) ON DELETE CASCADE
+        FOREIGN KEY(vaultId) REFERENCES vaults(id),
+        FOREIGN KEY(keepId) REFERENCES keeps(id),
+        FOREIGN KEY(creatorId) REFERENCES accounts(id) -- FOREIGN KEY(keepId) REFERENCES keeps(id)
     ) default charset utf8 COMMENT '';
 
-DROP Table
+DROP Table storedInVault
 
 SELECT keep.*, acc.*
 FROM keeps keep
