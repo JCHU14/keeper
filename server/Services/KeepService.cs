@@ -38,13 +38,28 @@ namespace keeper.Services
             {
                 throw new Exception($"Invalid Id: {keepId}");
             }
-            keep.Views += 1;
+            keep.Views++;
+            Keep keep1 = UpdateViewCount(keep);
+            return keep;
+
+        }
+
+        internal Keep UpdateViewCount(Keep keepData)
+        {
+            Keep keep = _repository.UpdateKeep(keepData);
             return keep;
         }
+
 
         internal List<Keep> GetKeeps(string name, string id)
         {
             List<Keep> keeps = _repository.GetKeeps();
+            return keeps;
+        }
+
+        internal List<Keep> GetKeepsByProfileId(string profileId)
+        {
+            List<Keep> keeps = _repository.GetKeepsByProfileId(profileId);
             return keeps;
         }
 

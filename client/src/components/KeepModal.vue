@@ -3,6 +3,7 @@
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header text-end justify-content-end">
+                    <button @click="deleteKeep(keeps.id)" class="btn fs-3"><i class="mdi mdi-delete"></i></button>
                 </div>
 
                 <div v-if="keeps" class="modal-body">
@@ -53,11 +54,27 @@
 <script>
 import { AppState } from '../AppState';
 import { computed, reactive, onMounted } from 'vue';
+import { keepsService } from '../services/KeepsService';
+import { Modal } from 'bootstrap';
+import Pop from '../utils/Pop';
 
 export default {
     setup() {
         return {
-            keeps: computed(() => AppState.activeKeep)
+            keeps: computed(() => AppState.activeKeep),
+            async deleteKeep(keepId) {
+                try {
+                    const yes = await Pop.confirm(`Are you sure you want to delete this keep?`);
+                    if (!yes) {
+                        return;
+                    }
+                    await keepsService.destroyKeep(keepId);
+                    Modal.getOrCreateInstance('#keepModal').hide();
+                }
+                catch (error) {
+                    Pop.error;
+                }
+            },
         }
     }
 };

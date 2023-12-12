@@ -13,8 +13,8 @@ class AccountService {
     }
   }
 
-  async editAccount(accountData){
-    const res = await api.put('account', accountData)
+  async editAccount(editData){
+    const res = await api.put('/account', editData)
     logger.log(res.data)
     AppState.account = new Account(res.data)
   }

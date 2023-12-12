@@ -1,9 +1,13 @@
 <template>
   <div class="container-fluid">
+
     <div class="row">
 
-      <div class="col-md-4 col-6 pt-5" v-for="keep in keeps" :key="keep">
-        <KeepComp :keepProp="keep" />
+      <div class="col-md-4 col-12 pt-5" v-for="keep in keeps" :key="keep">
+        <div>
+          <KeepComp :keepProp="keep" />
+
+        </div>
       </div>
 
     </div>

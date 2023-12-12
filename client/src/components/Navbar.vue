@@ -14,7 +14,7 @@
         <button data-bs-toggle="modal" data-bs-target="#createModal" class="btn glow fs-5">Create Keep</button>
       </div>
       <div class="align-items-center p-1">
-        <button class="btn glow fs-5">Create Vault</button>
+        <button data-bs-toggle="modal" data-bs-target="#vaultModal" class="btn glow fs-5">Create Vault</button>
       </div>
 
     </div>
@@ -36,6 +36,7 @@
     </div>
   </nav>
   <CreateKeep />
+  <CreateVault />
 </template>
 
 <script>
@@ -43,6 +44,7 @@ import { onMounted, ref } from 'vue';
 import { loadState, saveState } from '../utils/Store.js';
 import Login from './Login.vue';
 import CreateKeep from './CreateKeep.vue';
+import CreateVault from './CreateVault.vue';
 export default {
   setup() {
 
@@ -61,7 +63,7 @@ export default {
       }
     }
   },
-  components: { Login, CreateKeep }
+  components: { Login, CreateKeep, CreateVault }
 }
 </script>
 

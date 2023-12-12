@@ -1,6 +1,7 @@
 
 
 
+
 namespace keeper.Repositories
 {
     public class VaultKeepRepo
@@ -47,14 +48,15 @@ namespace keeper.Repositories
             keeps.*,
             accounts.*
             FROM vaultKeeps
-            JOIN keeps ON keep.id = vaultKeep.keepId
-            JOIN accounts ON account.id = vaultKeep.accountId
+            JOIN keeps ON keeps.id = vaultKeeps.keepId
+            JOIN accounts ON accounts.id = keeps.creatorId
             WHERE vaultKeeps.vaultId = @vaultId;";
 
-            List<ProfileVaultKeeps> vaultKeeps = _db.Query<VaultKeep, ProfileVaultKeeps, ProfileVaultKeeps>(sql, (vaultKeep, profileVaultKeep) =>
+            List<ProfileVaultKeeps> vaultKeeps = _db.Query<VaultKeep, ProfileVaultKeeps, Profile, ProfileVaultKeeps>(sql, (vaultKeep, profileVaultKeep, profile) =>
             {
                 profileVaultKeep.VaultKeepId = vaultKeep.Id;
                 profileVaultKeep.VaultId = vaultKeep.VaultId;
+                profileVaultKeep.Creator = profile;
                 return profileVaultKeep;
             }, new { vaultId }).ToList();
             return vaultKeeps;
@@ -81,5 +83,7 @@ namespace keeper.Repositories
             }, new { userId }).ToList();
             return vaultKeepVaults;
         }
+
+
     }
 }

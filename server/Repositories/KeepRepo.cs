@@ -2,6 +2,8 @@
 
 
 
+
+
 namespace keeper.Repositories
 {
     public class KeepRepo
@@ -19,6 +21,8 @@ namespace keeper.Repositories
             keep.Creator = profile;
             return keep;
         }
+
+
 
         internal Keep CreateKeep(Keep keepData)
         {
@@ -78,7 +82,8 @@ namespace keeper.Repositories
             SET
             name = @Name,
             description = @Description,
-            img = @Img
+            img = @Img,
+            views = @views
             
             WHERE id = @Id LIMIT 1;
             
@@ -92,5 +97,22 @@ namespace keeper.Repositories
             Keep keep = _db.Query<Keep, Profile, Keep>(sql, KeepBuilder, keepData).FirstOrDefault();
             return keep;
         }
+
+        internal List<Keep> GetKeepsByProfileId(string profileId)
+        {
+            string sql = @"
+            SELECT
+            keeps.*,
+            accounts.*
+            FROM keeps
+            JOIN accounts ON accounts.id = keeps.creatorId
+            WHERE keeps.creatorId = @profileId
+            ;";
+
+            List<Keep> keeps = _db.Query<Keep, Profile, Keep>(sql, KeepBuilder, new { profileId }).ToList();
+            return keeps;
+        }
+
+
     }
 }

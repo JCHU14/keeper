@@ -37,11 +37,12 @@ namespace keeper.Controllers
 
 
         [HttpGet("{vaultId}")]
-        public ActionResult<Vault> GetVaultById(int vaultId)
+        public async Task<ActionResult<Vault>> GetVaultById(int vaultId)
         {
             try
             {
-                Vault vault = _vaultsService.GetVaultById(vaultId);
+                Account userInfo = await _auth0Provider.GetUserInfoAsync<Account>(HttpContext);
+                Vault vault = _vaultsService.GetVaultById(vaultId, userInfo?.Id);
                 return Ok(vault);
             }
             catch (Exception error)

@@ -19,7 +19,7 @@ CREATE TABLE
         img VARCHAR(1000) NOT NULL,
         description VARCHAR(500) NOT NULL,
         vaultId INT,
-        Foreign Key (vaultId) REFERENCES vaults(id) ON DELETE CASCADE,
+        -- Foreign Key (vaultId) REFERENCES vaults(id) ON DELETE CASCADE,
         views INT DEFAULT 0,
         -- accountId VARCHAR(255) NOT NULL,
         -- Foreign Key (accountId) REFERENCES accounts(id) ON DELETE CASCADE,
@@ -49,9 +49,9 @@ CREATE TABLE
         vaultId INT NOT NULL,
         keepId INT NOT NULL,
         creatorId VARCHAR(255) NOT NULL,
-        FOREIGN KEY(vaultId) REFERENCES vaults(id),
+        FOREIGN KEY(vaultId) REFERENCES vaults(id) ON DELETE CASCADE,
         FOREIGN KEY(keepId) REFERENCES keeps(id),
-        FOREIGN KEY(creatorId) REFERENCES accounts(id) -- FOREIGN KEY(keepId) REFERENCES keeps(id)
+        FOREIGN KEY(creatorId) REFERENCES accounts(id)
     ) default charset utf8 COMMENT '';
 
 DROP Table storedInVault
@@ -60,3 +60,34 @@ SELECT keep.*, acc.*
 FROM keeps keep
     JOIN accounts acc ON acc.id = keep.creatorId
 WHERE keep.id = 1;
+
+SELECT
+    vaultKeeps.*,
+    accounts.*
+FROM vaultKeeps
+WHERE vaultKeeps.id = 1
+
+SELECT
+    vaultKeeps.*,
+    keeps.*,
+    accounts.*
+FROM vaultKeeps
+    JOIN keeps ON vaultKeeps.keepId = keeps.id
+    JOIN accounts ON accounts.id = vaultKeeps.creatorId
+WHERE vaultKeeps.vaultId = 19;
+
+SELECT vaults.*, accounts.*
+FROM vaults
+    JOIN accounts ON accounts.id = vaults.creatorId
+WHERE
+    vaults.creatorId = @userId;
+
+SELECT
+    vaultKeeps.*,
+    keeps.*,
+    accounts.*
+FROM vaultKeeps
+    JOIN keeps ON keeps.id = vaultKeeps.keepId
+    JOIN accounts ON accounts.id = keeps.creatorId
+WHERE
+    vaultKeeps.vaultId = @vaultId;

@@ -33,7 +33,7 @@ namespace keeper.Services
 
         internal string DestroyVault(int vaultId, string userId)
         {
-            Vault vault = GetVaultById(vaultId);
+            Vault vault = GetVaultById(vaultId, userId);
 
             if (vault.CreatorId != userId)
             {
@@ -54,12 +54,16 @@ namespace keeper.Services
 
         // *FIXME - Might have to fix
 
-        internal Vault GetVaultById(int vaultId)
+        internal Vault GetVaultById(int vaultId, string userId)
         {
             Vault vault = _repository.GetVaultById(vaultId);
             if (vault == null)
             {
                 throw new Exception($"Invalid Id: {vaultId}");
+            }
+            if (vault.IsPrivate == true && vault.CreatorId != userId)
+            {
+                throw new Exception("good try....");
             }
 
             return vault;
@@ -78,11 +82,9 @@ namespace keeper.Services
 
 
 
-
-
         internal Vault UpdateVault(int vaultId, string userId, Vault vaultData)
         {
-            Vault vaultToUpdate = GetVaultById(vaultId);
+            Vault vaultToUpdate = GetVaultById(vaultId, userId);
 
             if (vaultToUpdate.CreatorId != userId)
             {
@@ -98,6 +100,17 @@ namespace keeper.Services
             return vault;
 
 
+        }
+        internal List<Vault> GetVaultsByProfileId(string profileId)
+        {
+            List<Vault> vaults = _repository.GetVaultsByProfileId(profileId);
+            return vaults;
+        }
+
+        internal List<Vault> GetVaultsByAccountId(string userId)
+        {
+            List<Vault> vaults = _repository.GetVaultsByAccountId(userId);
+            return vaults;
         }
     }
 }

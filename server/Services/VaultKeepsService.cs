@@ -4,10 +4,12 @@ namespace keeper.Services
     {
 
         private readonly VaultKeepRepo _repo;
+        private readonly VaultKeepRepo _vaultRepo;
 
-        public VaultKeepsService(VaultKeepRepo repo)
+        public VaultKeepsService(VaultKeepRepo repo, VaultKeepRepo vaultRepo)
         {
             _repo = repo;
+            _vaultRepo = vaultRepo;
         }
 
         internal VaultKeep CreateVaultKeep(VaultKeep vaultKeepData)
@@ -29,7 +31,7 @@ namespace keeper.Services
                 throw new Exception("not yours to delete");
             }
             _repo.DeleteVaultKeep(vaultKeepId);
-            return "Deleted VaultKeep";
+            return $"Deleted VaultKeep {vaultKeepId}";
         }
 
         internal VaultKeep GetVaultKeepById(int vaultKeepId)
@@ -41,6 +43,7 @@ namespace keeper.Services
             }
             return vaultKeep;
         }
+
 
         internal List<ProfileVaultKeeps> GetVaultKeepsByVaultId(int vaultId)
         {

@@ -2,6 +2,9 @@
 
 
 
+
+
+
 namespace keeper.Repositories
 {
     public class VaultRepo
@@ -24,8 +27,8 @@ namespace keeper.Repositories
         {
             string sql = @"
             INSERT INTO
-            vaults (name, description, img, creatorId)
-            VALUES (@Name, @Description, @Img, @CreatorId);
+            vaults (name, description, img, creatorId, isPrivate)
+            VALUES (@Name, @Description, @Img, @CreatorId, @IsPrivate);
             
             SELECT
             vault.*,
@@ -112,6 +115,36 @@ namespace keeper.Repositories
 
             Vault vault = _db.Query<Vault, Profile, Vault>(sql, VaultBuilder, vaultData).FirstOrDefault();
             return vault;
+        }
+
+        internal List<Vault> GetVaultsByProfileId(string profileId)
+        {
+            string sql = @"
+            SELECT
+            vaults.*,
+            accounts.*
+            FROM vaults
+            JOIN accounts ON accounts.id = vaults.creatorId
+            WHERE vaults.creatorId = @profileId
+            ;";
+
+            List<Vault> vaults = _db.Query<Vault, Profile, Vault>(sql, VaultBuilder, new { profileId }).ToList();
+            return vaults;
+        }
+
+        internal List<Vault> GetVaultsByAccountId(string userId)
+        {
+            string sql = @"
+            SELECT
+            vaults.*,
+            accounts.*
+            FROM vaults
+            JOIN accounts ON accounts.id = vaults.creatorId
+            WHERE vaults.creatorId = @userId
+            ;";
+
+            List<Vault> vaults = _db.Query<Vault, Profile, Vault>(sql, VaultBuilder, new { userId }).ToList();
+            return vaults;
         }
     }
 }
