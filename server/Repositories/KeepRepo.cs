@@ -28,8 +28,8 @@ namespace keeper.Repositories
         {
             string sql = @"
             INSERT INTO
-            keeps (name, description, img, creatorId, views)
-            VALUES (@Name, @Description, @Img, @CreatorId, @Views);
+            keeps (name, description, img, creatorId, views, kept)
+            VALUES (@Name, @Description, @Img, @CreatorId, @Views, @Kept);
             
             SELECT
             keep.*,
@@ -83,7 +83,8 @@ namespace keeper.Repositories
             name = @Name,
             description = @Description,
             img = @Img,
-            views = @views
+            views = @views,
+            kept = @Kept
             
             WHERE id = @Id LIMIT 1;
             

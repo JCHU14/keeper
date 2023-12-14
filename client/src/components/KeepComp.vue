@@ -3,7 +3,7 @@
         <div class="row">
 
             <div>
-                <div>
+                <div @click="getVaultByAccount()">
                     <img type="button" role="button" data-bs-toggle="modal" data-bs-target="#keepModal"
                         @click="getKeepById(keepProp.id);" class="img-fluid image" :src="keepProp.img" alt="">
                     <div class="d-flex justify-content-between p-2 align-items-center">
@@ -28,11 +28,13 @@ import { Keep } from '../models/Keep';
 import { logger } from '../utils/Logger';
 import Pop from '../utils/Pop';
 import { keepsService } from '../services/KeepsService';
+import { accountService } from '../services/AccountService';
+import { useRoute } from 'vue-router';
 export default {
     props: { keepProp: { type: Keep, required: true } },
 
     setup() {
-
+        const route = useRoute();
         return {
             async getKeepById(keepId) {
                 try {
@@ -40,6 +42,15 @@ export default {
                     await keepsService.getKeepById(keepId)
                     Modal.getOrCreateInstance('#keepModal').hide()
                 } catch (error) {
+                    Pop.error
+                }
+            },
+            async getVaultByAccount() {
+                try {
+                    const accountId = route.params.accountId;
+                    await accountService.getVaultsByAccount(accountId);
+                }
+                catch (error) {
                     Pop.error
                 }
             }

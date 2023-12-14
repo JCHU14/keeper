@@ -13,6 +13,11 @@ namespace keeper.Repositories
         {
             _db = db;
         }
+        private VaultKeep VaultKeepBuilder(VaultKeep vaultKeep, Profile profile)
+        {
+            vaultKeep.Creator = profile;
+            return vaultKeep;
+        }
 
         internal VaultKeep CreateVaultKeep(VaultKeep vaultKeepData)
         {
@@ -21,9 +26,14 @@ namespace keeper.Repositories
             vaultKeeps(vaultId, keepId, creatorId)
             VALUES(@VaultId, @KeepId, @CreatorId);
             
-            SELECT * FROM vaultKeeps WHERE id = LAST_INSERT_ID();";
+            SELECT
+            vaultKeeps.*,
+            accounts.*
+            FROM vaultKeeps
+            JOIN accounts ON accounts.id = vaultKeeps.creatorId
+            WHERE vaultKeeps.id = LAST_INSERT_ID();";
 
-            VaultKeep vaultKeep = _db.Query<VaultKeep>(sql, vaultKeepData).FirstOrDefault();
+            VaultKeep vaultKeep = _db.Query<VaultKeep, Profile, VaultKeep>(sql, VaultKeepBuilder, vaultKeepData).FirstOrDefault();
             return vaultKeep;
         }
 
@@ -62,27 +72,7 @@ namespace keeper.Repositories
             return vaultKeeps;
         }
 
-        internal List<VaultKeepVault> GetVaultKeepsByAccountId(string userId)
-        {
-            string sql = @"
-            SELECT
-            vaultKeep.*,
-            vault.*,
-            account.*
-            FROM vaultKeeps
-            JOIN vaults ON vaultKeep.vaultId = vault.id
-            JOIN accounts ON account.id = vault.creatorId
-            WHERE vaultKeeps.accountId = @userId;";
 
-            List<VaultKeepVault> vaultKeepVaults = _db.Query<VaultKeep, VaultKeepVault, Profile, VaultKeepVault>(sql, (vaultKeep, vaultKeepVault, profile) =>
-            {
-                vaultKeepVault.VaultKeepId = vaultKeep.Id;
-                vaultKeepVault.CreatorId = vaultKeep.CreatorId;
-                vaultKeepVault.Creator = profile;
-                return vaultKeepVault;
-            }, new { userId }).ToList();
-            return vaultKeepVaults;
-        }
 
 
     }

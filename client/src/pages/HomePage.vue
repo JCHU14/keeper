@@ -21,6 +21,7 @@ import Pop from '../utils/Pop';
 import KeepComp from '../components/KeepComp.vue';
 import { AppState } from '../AppState';
 import { vaultService } from '../services/VaultService';
+import { useRoute } from 'vue-router';
 
 
 
@@ -38,6 +39,9 @@ export default {
         Pop.error;
       }
     }
+
+
+    const route = useRoute();
 
     async function getVaults() {
       try {

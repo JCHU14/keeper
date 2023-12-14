@@ -10,5 +10,6 @@
             this.creatorId = data.creatorId
             this.kept = data.kept
             this.creator = data.creator
+            this.vaultKeepId = data.vaultKeepId
         }
     }

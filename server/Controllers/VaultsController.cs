@@ -102,13 +102,13 @@ namespace keeper.Controllers
                 return BadRequest(error.Message);
             }
         }
-
         [HttpGet("{vaultId}/keeps")]
-        public ActionResult<List<ProfileVaultKeeps>> GetKeepsByVaultId(int vaultId)
+        public async Task<ActionResult<List<ProfileVaultKeeps>>> GetKeepsByVaultId(int vaultId)
         {
             try
             {
-                List<ProfileVaultKeeps> vaultKeeps = _vaultKeepsService.GetVaultKeepsByVaultId(vaultId);
+                Account userInfo = await _auth0Provider.GetUserInfoAsync<Account>(HttpContext);
+                List<ProfileVaultKeeps> vaultKeeps = _vaultKeepsService.GetVaultKeepsByVaultId(vaultId, userInfo?.Id);
                 return Ok(vaultKeeps);
             }
             catch (Exception error)

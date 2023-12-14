@@ -125,7 +125,7 @@ namespace keeper.Repositories
             accounts.*
             FROM vaults
             JOIN accounts ON accounts.id = vaults.creatorId
-            WHERE vaults.creatorId = @profileId
+            WHERE vaults.creatorId = @profileId AND vaults.isPrivate = false
             ;";
 
             List<Vault> vaults = _db.Query<Vault, Profile, Vault>(sql, VaultBuilder, new { profileId }).ToList();

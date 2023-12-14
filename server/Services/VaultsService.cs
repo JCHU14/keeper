@@ -76,7 +76,7 @@ namespace keeper.Services
         internal List<Vault> GetVaults(string name, string userId)
         {
             List<Vault> vaults = name == null ? _repository.GetVaults() : _repository.GetVaultsWithQuery(name);
-            vaults = vaults.FindAll(vault => vault.IsPrivate == false || vault.CreatorId == userId);
+            vaults = vaults.FindAll(vault => vault.IsPrivate == true || vault.CreatorId == userId);
             return vaults;
         }
 

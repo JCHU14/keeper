@@ -4,7 +4,7 @@ import { VaultKeep } from "../models/VaultKeep"
 import { logger } from "../utils/Logger"
 import { api } from "./AxiosService"
 
-class KeepsService{
+class VaultKeepsService{
 
     async getVaultKeeps(){
         const res = await api.get(`api/vaultKeeps`)
@@ -24,9 +24,8 @@ class KeepsService{
         const res = await api.delete(`api/vaultKeeps/${vaultKeepId}`);
         const vaultKeepIndex = AppState.vaultKeeps.findIndex(vaultKeep => vaultKeep.id == vaultKeepId)
         logger.log("vaultKeep Deleted", res.data);
-        AppState.vaultKeeps = new VaultKeep(res.data);
+        AppState.vaultKeeps = new VaultKeep();
         AppState.vaultKeeps.splice(vaultKeepIndex, 1)
-      
     }
 
     async editVaultKeep(vaultKeepId, vaultKeepData) {
@@ -47,4 +46,4 @@ class KeepsService{
 
 }
 
-export const keepsService = new KeepsService();
+export const vaultKeepsService = new VaultKeepsService();

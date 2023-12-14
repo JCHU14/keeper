@@ -14,6 +14,8 @@
                                 <img class="image box-shadow" :src="keeps.img" alt="">
                             </div>
 
+
+
                             <div class="col-md-7 col-12">
                                 <div class="d-flex justify-content-center pb-5">
                                     <p class="p-1 fs-5"> <i class="mdi mdi-eye"></i>{{ keeps.views }}</p>
@@ -28,8 +30,20 @@
 
                                 <div class="pt-5 d-flex justify-content-between">
                                     <div>
-                                        <button class="btn">Vault Dropdown <i class="mdi mdi-menu-down"></i></button>
-                                        <button class="btn btn-info">save</button>
+                                        <form @submit.prevent="createVaultKeep()">
+
+                                            <select v-model="editable.vaultId" class="form-select"
+                                                aria-label="Default select example">
+                                                <option selected>Open this select menu</option>
+
+                                                <option v-for="vault in vaults" :key="vault.id" :value="vault.id">
+                                                    {{ vault.name }}
+                                                </option>
+                                            </select>
+
+                                            <button type="submit" class="btn btn-info">save</button>
+
+                                        </form>
                                     </div>
 
                                     <div class="d-flex">
@@ -37,6 +51,8 @@
                                         <p class="fs-5 p-1">{{ keeps.creator?.name }}</p>
                                     </div>
                                 </div>
+
+
 
                             </div>
 
@@ -53,15 +69,21 @@
 
 <script>
 import { AppState } from '../AppState';
-import { computed, reactive, onMounted } from 'vue';
+import { computed, reactive, onMounted, ref } from 'vue';
 import { keepsService } from '../services/KeepsService';
 import { Modal } from 'bootstrap';
 import Pop from '../utils/Pop';
+import { vaultKeepsService } from '../services/VaultKeepsService';
+import { useRoute } from 'vue-router';
 
 export default {
     setup() {
+        const editable = ref({})
+        const route = useRoute();
         return {
             keeps: computed(() => AppState.activeKeep),
+            vaults: computed(() => AppState.vaults),
+            editable,
             async deleteKeep(keepId) {
                 try {
                     const yes = await Pop.confirm(`Are you sure you want to delete this keep?`);
@@ -75,6 +97,18 @@ export default {
                     Pop.error;
                 }
             },
+            async createVaultKeep() {
+                try {
+                    const vaultKeepData = editable.value
+                    vaultKeepData.keepId = this.keeps.id;
+                    await vaultKeepsService.createVaultKeep(vaultKeepData)
+
+                    editable.value = {}
+
+                } catch (error) {
+                    Pop.error(error)
+                }
+            }
         }
     }
 };

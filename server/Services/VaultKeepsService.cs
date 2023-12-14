@@ -6,20 +6,33 @@ namespace keeper.Services
         private readonly VaultKeepRepo _repo;
         private readonly VaultKeepRepo _vaultRepo;
 
-        public VaultKeepsService(VaultKeepRepo repo, VaultKeepRepo vaultRepo)
+        private readonly VaultsService _vaultsService;
+
+        private readonly KeepService _keepService;
+
+        public VaultKeepsService(VaultKeepRepo repo, VaultKeepRepo vaultRepo, VaultsService vaultsService, KeepService keepService)
         {
             _repo = repo;
             _vaultRepo = vaultRepo;
+            _vaultsService = vaultsService;
+            _keepService = keepService;
         }
 
         internal VaultKeep CreateVaultKeep(VaultKeep vaultKeepData)
         {
+
+            Vault vault = _vaultsService.GetVaultById(vaultKeepData.VaultId, vaultKeepData.CreatorId);
+
             VaultKeep vaultKeep = _repo.CreateVaultKeep(vaultKeepData);
 
-            if (vaultKeep == null)
+            if (vault.CreatorId != vaultKeepData.CreatorId)
             {
-                throw new Exception("Invalid Id");
+                throw new Exception("not your vault to alter");
             }
+
+            Keep keep = _keepService.GetKeepById(vaultKeepData.KeepId);
+            keep.Kept++;
+            _keepService.UpdateViewCount(keep);
             return vaultKeep;
         }
 
@@ -45,17 +58,15 @@ namespace keeper.Services
         }
 
 
-        internal List<ProfileVaultKeeps> GetVaultKeepsByVaultId(int vaultId)
+        internal List<ProfileVaultKeeps> GetVaultKeepsByVaultId(int vaultId, string userId)
         {
+            _vaultsService.GetVaultById(vaultId, userId);
+
             List<ProfileVaultKeeps> vaultKeeps = _repo.GetKeepsByVaultId(vaultId);
             return vaultKeeps;
         }
 
-        internal List<VaultKeepVault> GetVaultKeepsByAccountId(string userId)
-        {
-            List<VaultKeepVault> vaultKeepVaults = _repo.GetVaultKeepsByAccountId(userId);
-            return vaultKeepVaults;
-        }
+
 
 
     }

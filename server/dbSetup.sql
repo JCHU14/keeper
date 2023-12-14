@@ -19,6 +19,7 @@ CREATE TABLE
         img VARCHAR(1000) NOT NULL,
         description VARCHAR(500) NOT NULL,
         vaultId INT,
+        kept INT NOT NULL,
         -- Foreign Key (vaultId) REFERENCES vaults(id) ON DELETE CASCADE,
         views INT DEFAULT 0,
         -- accountId VARCHAR(255) NOT NULL,
@@ -50,7 +51,7 @@ CREATE TABLE
         keepId INT NOT NULL,
         creatorId VARCHAR(255) NOT NULL,
         FOREIGN KEY(vaultId) REFERENCES vaults(id) ON DELETE CASCADE,
-        FOREIGN KEY(keepId) REFERENCES keeps(id),
+        FOREIGN KEY(keepId) REFERENCES keeps(id) ON DELETE CASCADE,
         FOREIGN KEY(creatorId) REFERENCES accounts(id)
     ) default charset utf8 COMMENT '';
 
@@ -91,3 +92,17 @@ FROM vaultKeeps
     JOIN accounts ON accounts.id = keeps.creatorId
 WHERE
     vaultKeeps.vaultId = @vaultId;
+
+SELECT * FROM vaults WHERE vaults.isPrivate = false
+
+SELECT vaults.*, accounts.*
+FROM vaults
+    JOIN accounts ON accounts.id = vaults.creatorId
+WHERE vaults.isPrivate = false;
+
+SELECT vaults.*, accounts.*
+FROM vaults
+    JOIN accounts ON accounts.id = vaults.creatorId
+WHERE
+    vaults.creatorId = @userId
+    AND vaults.isPrivate = false;
